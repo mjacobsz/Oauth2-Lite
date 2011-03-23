@@ -1,4 +1,4 @@
-app/controllers/scaffold.rb
+app/controllers/scaffold_controller.rb
 app/views/scaffold
 app/views/scaffold/*
 .bundle
