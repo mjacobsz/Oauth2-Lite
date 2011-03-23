@@ -1,6 +1,8 @@
 app/controllers/scaffold_controller.rb
 app/views/scaffold
 app/views/scaffold/*
+private
+private/*
 .bundle
 db/*.sqlite3
 log/*.log
