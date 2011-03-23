@@ -1,0 +1,120 @@
+# On implementing OAuth2
+
+## Introduction
+This document describes all data that is being used for the purpose of implementing OAuth2 in Zwapp. It basically consists
+of three parts:   
+(1) 'Unclear', questions and things that are not clear about the protocol and its implementation.  
+(2) Description of the actors and their actions.  
+(3) User stories, that describes a given scenario which involves OAuth2 , in the context of Zwapp.  
+
+## Unclear
+Some of these remarks are preceded by a (P). This means that these remarks have a higher priority than those that do not have a (P)
+We have to find these things out:
+
+_client related matters_   
+* A client needs an ID, thats understandable. But why does a client need a secret?  
+* Why does a client has to authenticate itself; does this not imply that things are done double; i.e. redundancy alert?  
+Because: First a client has to authenticate, for an authorization code. Then a user has to authentice himself. Thats double stuff.
+
+_redirection_  
+* (P) What about the redirection URL in relation to Zwapp? The Zwapp app(s) is(are) no webservice(s), so it makes no sense to
+get supply a redirection URL, for we can not browse to this location, right?  
+* Why not always use the address from where the request is being sent, as the redirect url? Or by default?
+
+_remarks that don't fall in a specific category_  
+* (P) How do the actors defined in the protocol map on Zwapp actors?  
+* What about defining these scenario's like this:  
+> step i: <description>
+>   actor X -> actor Y (i.e. Client -> Authorization server)
+>   data_sent ( param1, param2, ... , paramn ) -> data_required ( field1, field2, ... , fieldn )
+>
+> step i+1: <description>
+>   actor X -> actor Y
+>   data_sent ( param1, param2, ... , paramn ) -> data_required ( field1, field2, ... , fieldn )
+
+## Actors
+* User: A human being using Zwapp/Toolbar
+* Client: Zwapp app, toolbar app
+* Resource server: The project X server / Zwapp server
+* Authorization server: ??
+
+## User stories
+
+// This is based on the implementation of the facebook oauth2 control flow  
+// This means that app authorization and user authentication occur on the same time (?)  
+// Authorization server == Resource server  
+
+### Client
+
+(1) Client registers itself to the authorization server
+
+When a client visits the url for registration on the authorization server  
+Then the client should provide both a name as well as a secret  
+Then the authorization server generates a client_id  
+And the authorization server inserts a record in to the database containing:  
+  Table : Client ; 
+    id                    // Generatered by Active Record  
+    name                  // String representation of how the client calls itself  
+    client_id             // Server generates an id for the client  
+    client_secret         // i.e. : A password; public key  
+And the authorization server answers by sending the client_id to the client
+
+### Authorization server
+
+(1) Client asks for an access_token_exchange_code
+
+When a client asks the authorization server for an access_token_exchange_code  
+Then the client should supply the next values: client_id, redirect_url  
+Then the authorization server checks if it has a record containing that client_id  
+
+  If so, the authorization server presents the client a form, where the user enters its credentials ( see (99) )  
+    If credentials are correct  
+    the authorization server inserts a record in to the database containing:  
+      Table : Token ;  
+      client_id                                       // Is passed in this request  
+      user_id                                         // Is obtained during the credentials phase ( see (99) )  
+      access_token_exchange_code                      // Token that will be returned when this scenario completes successfully  
+      access_token_exchange_code_issue_date           // This time, now  
+      access_token                                    // This one should be generated and should be returned in the next scenario ( see (2) )  
+      refresh_token                                   // Could also be generated here, but could also stay null  
+      expiry_date                                     // Expiry date for the access token; i.e. Now + 1 hour  
+      revoked                                         // False; At this moment the token is not yet revoked   
+    
+    Then the authorization server redirects the client to the entered redirect_url with the access_token_exchange_code as a parameter  
+    
+    If not  
+    Repeat asking credentials
+  
+  If not,the authorization server redirects the client to the entered redirect_url with the the error as a parameter  
+  
+(2) Client asks for an access_token
+
+When a client asks the authorization server for an access token  
+Then the client should supply the next values: client_id, client_secret, access_token_exchange_code, redirect_url  
+Then the authorization server queries the database to check if the supplied values are values  
+
+  If so, the authorization server sends the access token to the client via the supplied redirect_url  
+  
+  If not, the authorization server will issue a http 400 with a body that contains the error in some format (i.e. XML, JSON)  
+
+(99) User authenticates himself by entering credentials
+
+When a user comes around a form that asks for its credentials  
+Then the form should look (and feel) trustworthy  
+Then the user supplies his username and password  
+Then the authorization server queries the database to check if the supplied values are correct  
+
+## Parking space for temporary data... (if you read this: Do not pay attention to this; its only purpose is to aid the writer)
+// 1
+(1) A client registers itself to the resource server; it wants to communicate with the resource server using a (still to acquire) token.
+client -> authorization (authentication?) server
+  data sent:
+    client-id
+    client-secret
+    
+authorization (authentication?) server -> client
+    date sent:
+      authorization grant
+      OR
+      authorization denied
+// 2

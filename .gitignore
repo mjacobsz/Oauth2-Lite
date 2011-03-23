@@ -1,0 +1,7 @@
+app/controllers/scaffold.rb
+app/views/scaffold
+app/views/scaffold/*
+.bundle
+db/*.sqlite3
+log/*.log
+tmp/

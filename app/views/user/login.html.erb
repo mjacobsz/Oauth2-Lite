@@ -1,0 +1,24 @@
+<% if flash[:error] %>
+  <p class="error"><%= flash[:error] %></p>
+<% end %>
+<h3 style="color:red">Session hash:</h3>
+<% session.each do |key, value| %>
+  <span style="color:red"><%= "Key: #{key}, Value: #{value} "%></span><br/>
+<% end %>
+
+<h3 style="color:red">Params hash:</h3>
+<% params.each do |key, value| %>
+  <span style="color:red"><%= "Key: #{key}, Value: #{value} "%></span><br/>
+<% end %>
+
+<hr />
+
+<%= form_tag(@location_to_post) do %>
+  <%= text_field_tag "email", "Email"%>
+  <br />
+  <br />
+  <%= text_field_tag "password", "Password"%>
+  <br />
+  <br />
+  <%= submit_tag "Login"%>
+<% end %>

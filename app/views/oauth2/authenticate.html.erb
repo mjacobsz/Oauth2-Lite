@@ -1,0 +1,15 @@
+<h3 style="color:red">Session hash:</h3>
+<% session.each do |key, value| %>
+  <span style="color:red"><%= "Key: #{key}, Value: #{value} "%></span><br/>
+<% end %>
+
+<h3 style="color:red">Params hash:</h3>
+<% params.each do |key, value| %>
+  <span style="color:red"><%= "Key: #{key}, Value: #{value} "%></span><br/>
+<% end %>
+
+<hr />
+
+<p>The application "<%= @client.name %>" requests your permission to eat some applepie.</p>
+<a href="/token/authenticated">Allow</a> <a href="/you_suck.html">Don't allow</a>
+
