@@ -1,15 +1,13 @@
-# Given /^a client exists$/ do
-#   client_id = 1337
-#   client_secret = "super_secret_string"
-#   @client = OAuth2::Client.new(client_id, client_secret)
-# end
-# 
-# Then /^I am happy$/ do
-#   "I am!"
-# end
+# GIVEN
+Given /^I log in as "(.*)" with email "(.*)" and with password "(.*)"$/ do |name, email, password| 
+  Given "user \"#{name}\" with email \"#{email}\" and password \"#{password}\" exists"
+  When "I go to \"/user/login\""
+  And "I fill in \"email\" with \"#{email}\""
+  And "I fill in \"password\" with \"#{password}\""
+  And "I press \"Login\""
+end
 
-Given /^I am (not)? logged in$/ do |no|
-  # puts "XXXXXXXXXXXXXXXXXXXX #{no} XXXXXXXXXXXXXXXXXXXX"
+Given /^I am not logged in$/ do 
   # Nothing
 end
 
@@ -21,6 +19,21 @@ Given /^user "(.*)" with email "(.*)" and password "(.*)" exists$/ do |username,
   User.new({:name => username, :email => email, :password => password}).save
 end
 
+Given /^client with name "(.*)", client_id "(.*)" and client_secret "(.*)" exists$/ do |name, id, secret|
+  Client.new({:name => name, :client_id => id, :client_secret => secret}).save
+end
+
+# WHEN
+When /^I do a custom visit to (.*)$/ do |params|
+  visit params
+end
+
+When /^I want to change a cookie$/ do
+  cookies = Capybara.current_session.driver.current_session.instance_variable_get(:@rack_mock_session).cookie_jar
+  cookies[:some_key] = "some_value"
+end
+
+# THEN
 Then /^I should be redirected to "([^"]*)"$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
@@ -31,8 +44,4 @@ end
 
 Then /^params\[:([a-z]*)\] should be '([a-z]*)'$/ do |key, value|
   params[key].should value
-end
-
-Then /^It must be spring$/ do
-  true
 end

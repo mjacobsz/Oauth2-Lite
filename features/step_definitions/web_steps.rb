@@ -217,7 +217,3 @@ end
 Then /^show me the page$/ do
   save_and_open_page
 end
-
-When /^I do a custom visit to (.*)$/ do |params|
-  visit params
-end

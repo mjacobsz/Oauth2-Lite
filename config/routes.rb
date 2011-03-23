@@ -8,23 +8,17 @@ Oauth2Lite20::Application.routes.draw do
 
   match 'user/login' => 'User#login'
   match 'user/validate' => 'User#validate'
-  # match 'user/render_missing_info' => 'User#render_missing_info'
-  # match 'user/affirm_and_redirect' => 'User#affirm_and_redirect'
   
-  #match 'oauth2/login' => 'Oauth2#login'
-  #match 'oauth2/validate' => 'Oauth2#validate'
   match 'oauth2/authenticate' => 'Oauth2#authenticate'
   match 'oauth2/missing_info' => 'Oauth2#missing_info'
-  # match 'oauth2/affirm_and_redirect' => 'Oauth2#affirm_and_redirect'
   match 'oauth2/error.html' => 'Oauth2#error'
-  
+  match 'oauth2/granted' => 'Oauth2#redirect_uri_test'
   
   match 'token/authenticated' => 'Token#authenticated'
   
-  match 'scaffold/dilla' => 'Scaffold#mami'
-  match 'scaffold/jayz' => 'Scaffold#jayz'
-  
-  match 'dummy' => 'User#dummy'
+  #match 'scaffold/dilla' => 'Scaffold#mami'
+  #match 'scaffold/jayz' => 'Scaffold#jayz'
+  #match 'scaffold/mobd' => 'Scaffold#mobd'
 
   # Sample of named route:
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase

@@ -21,11 +21,13 @@ gem 'sqlite3'
 gem 'oauth2'
 
 # Testing, testing!
-gem 'cucumber-rails'
+gem 'cucumber-rails', '>=0.4.0' 
 gem 'rspec'
 gem 'capybara'
 gem 'launchy'
 gem 'ruby-debug'
+
+gem 'database_cleaner'
 # Bundle the extra gems:
 # gem 'bj'
 # gem 'nokogiri'
