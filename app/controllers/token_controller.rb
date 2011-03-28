@@ -10,6 +10,7 @@ class TokenController < ApplicationController
     authorizion_grant = "granted"
     to_be_redirected_to = "http://#{redirect_uri}?code=#{authorizion_grant}"
 
+    # NOTE: Should this be in a seperate (standard) 'create' method? But then how do we pass parameters to it? 
     new_token_entry = Token.new({
       :client_id => session[:client_id],
       :user_id => session[:current_user],

@@ -7,12 +7,14 @@ class UserController < ApplicationController
   def validate
     unless @user = User.find_by_email(params[:email])
       flash[:error] = "No user known with entered email address"
-      redirect_to :action => "login" and return
+      redirect_to :action => "login" 
+      return
     end
     
     unless @user.password == params[:password]
       flash[:error] = "Entered password is incorrect"
-      redirect_to :action => "login" and return
+      redirect_to :action => "login"
+      return
     end
     
     session[:current_user] ||= @user.id

@@ -7,3 +7,5 @@ private/*
 db/*.sqlite3
 log/*.log
 tmp/
+.DS_Store
+*/.DS_Store

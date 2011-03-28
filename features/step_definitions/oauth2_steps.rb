@@ -1,4 +1,4 @@
-# GIVEN
+### GIVEN ###
 Given /^I log in as "(.*)" with email "(.*)" and with password "(.*)"$/ do |name, email, password| 
   Given "user \"#{name}\" with email \"#{email}\" and password \"#{password}\" exists"
   When "I go to \"/user/login\""
@@ -16,14 +16,20 @@ Given /^a registered application with client_id="([^"]*)"$/ do |arg1|
 end
 
 Given /^user "(.*)" with email "(.*)" and password "(.*)" exists$/ do |username, email, password|
-  User.new({:name => username, :email => email, :password => password}).save
+  @given_user = User.new({:name => username, :email => email, :password => password})
+  @given_user.save
 end
 
 Given /^client with name "(.*)", client_id "(.*)" and client_secret "(.*)" exists$/ do |name, id, secret|
-  Client.new({:name => name, :client_id => id, :client_secret => secret}).save
+  @given_client = Client.new({:name => name, :client_id => id, :client_secret => secret})
+  @given_client.save
 end
 
-# WHEN
+Given /^user has logged in to the client$/ do 
+  # Nothing
+end
+
+### WHEN ###
 When /^I do a custom visit to (.*)$/ do |params|
   visit params
 end
@@ -33,7 +39,16 @@ When /^I want to change a cookie$/ do
   cookies[:some_key] = "some_value"
 end
 
-# THEN
+# Do the actual 'POST' here?
+When /^the client request an access token with parameters: grant_type: "(.*)", client_id: "(.*)", client_secret: "(.*)", username: "(.*)" and password "(.*)"$/ do |gt, cid, csecret, username, password|
+      @provided_gt = gt
+      @provided_cid = cid
+      @provided_csecret = csecret
+      @provided_username = username
+      @provided_password = password
+end
+
+### THEN ###
 Then /^I should be redirected to "([^"]*)"$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
@@ -44,4 +59,12 @@ end
 
 Then /^params\[:([a-z]*)\] should be '([a-z]*)'$/ do |key, value|
   params[key].should value
+end
+
+Then /^the given parameters are valid$/ do
+  @provided_gt == "password" &&
+  @provided_cid = @given_client.client_id &&
+  @provided_csecret = @given_client.client_secret &&
+  @provided_username = @given_user.name &&
+  @provided_password = @given_user.password
 end

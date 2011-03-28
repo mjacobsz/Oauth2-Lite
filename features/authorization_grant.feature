@@ -1,4 +1,4 @@
-Feature: Client desires an authorization grant
+Feature: Client desires an authorization grant via 'Authorization code'
   In order for a client to get an access token
   As an authentication server
   When a client requests an authorization grant

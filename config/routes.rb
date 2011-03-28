@@ -13,6 +13,7 @@ Oauth2Lite20::Application.routes.draw do
   match 'oauth2/missing_info' => 'Oauth2#missing_info'
   match 'oauth2/error.html' => 'Oauth2#error'
   match 'oauth2/granted' => 'Oauth2#redirect_uri_test'
+  match 'oauth2/password_wise' => 'Oauth2#resource_owner_password_credentials'
   
   match 'token/authenticated' => 'Token#authenticated'
   
